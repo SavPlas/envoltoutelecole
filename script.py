@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import tempfile
 import json  # Pour charger le JSON depuis le fichier téléchargé
-
+import pytz
 
 # === CONFIGURATION ===
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -115,10 +115,13 @@ if uploaded_file is not None:
                 nom_utilisateur = st.text_input("📝 Entrez un nom pour le fichier généré : ")
 
                 if nom_utilisateur:
-                    from datetime import datetime
-                    horodatage = datetime.now().strftime("%Y-%m-%d_%Hh%M")
-                    nouveau_nom = f"{nom_utilisateur} - {horodatage}"
-                    st.info(f"📝 Nom du fichier final : {nouveau_nom}")
+                     # Utiliser pytz pour ajuster le fuseau horaire
+                        fuseau_horaire_local = pytz.timezone('Europe/Paris')  # À adapter à votre fuseau horaire local
+                        timestamp = pd.to_datetime("now", utc=True).tz_convert(fuseau_horaire_local).strftime("%Y-%m-%d_%Hh%M")
+    
+                        # Générer le nom du fichier avec la date et l'heure locale
+                        nouveau_nom = f"{nom_utilisateur} - {timestamp}"
+                        st.info(f"📝 Nom du fichier final : {nouveau_nom}")
 
                     file_id = create_spreadsheet_with_data(nouveau_nom, df_filtré, creds)
 
