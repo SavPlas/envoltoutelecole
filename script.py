@@ -88,7 +88,7 @@ def create_spreadsheet_with_data(title, df_filtered, creds, folder_id=FOLDER_ID)
 
 
 # === Interface Streamlit ===
-st.title("Filtrer et Exporter Google Sheet")
+st.title("ENVOL : toute l'école avec mes items de prédilection")
 
 uploaded_file = st.file_uploader("Téléchargez votre fichier JSON de clé privée", type="json")
 
