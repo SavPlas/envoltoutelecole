@@ -93,44 +93,44 @@ st.title("ENVOL : toute l'école avec mes items de prédilection")
 uploaded_file = st.file_uploader("Téléchargez votre fichier JSON de clé privée", type="json")
 
 if uploaded_file is not None:
-    try:
-        # Charger le contenu du fichier JSON
-        creds_info = json.load(uploaded_file)
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
-        client = gspread.authorize(creds)
+  try:
+    # Charger le contenu du fichier JSON
+    creds_info = json.load(uploaded_file)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
+    client = gspread.authorize(creds)
 
-        url_sheet = st.text_input("🔗 Veuillez coller l'URL du fichier Google Sheet à traiter : ")
+    url_sheet = st.text_input("🔗 Veuillez coller l'URL du fichier Google Sheet à traiter : ")
 
-        if url_sheet:
-            st.info("📥 Chargement du fichier Google Sheet...")
-            df = charger_dataframe_depuis_google_sheet(url_sheet, client)
+    if url_sheet:
+        st.info("📥 Chargement du fichier Google Sheet...")
+        df = charger_dataframe_depuis_google_sheet(url_sheet, client)
 
-            if df is not None:
-                colonnes_disponibles = [col for col in COLONNES_UTILISEES if col in df.columns]
-                df_filtré = df[colonnes_disponibles]
+        if df is not None:
+            colonnes_disponibles = [col for col in COLONNES_UTILISEES if col in df.columns]
+            df_filtré = df[colonnes_disponibles]
 
-                st.success(f"🔍 Colonnes retenues : {colonnes_disponibles}")
-                st.dataframe(df_filtré.head())  # Afficher un aperçu
+            st.success(f"🔍 Colonnes retenues : {colonnes_disponibles}")
+            st.dataframe(df_filtré.head())  # Afficher un aperçu
 
-                nom_utilisateur = st.text_input("📝 Entrez un nom pour le fichier généré : ")
+            nom_utilisateur = st.text_input("📝 Entrez un nom pour le fichier généré : ")
 
-                if nom_utilisateur:
-                     # Utiliser pytz pour ajuster le fuseau horaire
-                        fuseau_horaire_local = pytz.timezone('Europe/Paris')  # À adapter à votre fuseau horaire local
-                        timestamp = pd.to_datetime("now", utc=True).tz_convert(fuseau_horaire_local).strftime("%Y-%m-%d_%Hh%M")
-    
-                        # Générer le nom du fichier avec la date et l'heure locale
-                        nouveau_nom = f"{nom_utilisateur} - {timestamp}"
-                        st.info(f"📝 Nom du fichier final : {nouveau_nom}")
+            if nom_utilisateur:
+                # Utiliser pytz pour ajuster le fuseau horaire
+                fuseau_horaire_local = pytz.timezone('Europe/Paris')  # À adapter à votre fuseau horaire local
+                timestamp = pd.to_datetime("now", utc=True).tz_convert(fuseau_horaire_local).strftime("%Y-%m-%d_%Hh%M")
 
-                    file_id = create_spreadsheet_with_data(nouveau_nom, df_filtré, creds)
+                # Générer le nom du fichier avec la date et l'heure locale
+                nouveau_nom = f"{nom_utilisateur} - {timestamp}"
+                st.info(f"📝 Nom du fichier final : {nouveau_nom}")
 
-                    if file_id:
-                        st.success(f"✅ Nouveau fichier créé : https://docs.google.com/spreadsheets/d/{file_id}")
-                        st.info(f"📁 Fichier enregistré dans le dossier Google Drive ID : {FOLDER_ID}")
+                file_id = create_spreadsheet_with_data(nouveau_nom, df_filtré, creds)
 
-    except Exception as e:
-        st.error(f"Une erreur s'est produite lors du traitement : {e}")
+                if file_id:
+                    st.success(f"✅ Nouveau fichier créé : https://docs.google.com/spreadsheets/d/{file_id}")
+                    st.info(f"📁 Fichier enregistré dans le dossier Google Drive ID : {FOLDER_ID}")
+
+except Exception as e:
+    st.error(f"Une erreur s'est produite lors du traitement : {e}")
 
 else:
     st.warning("Veuillez télécharger votre fichier JSON de clé privée pour continuer.")
