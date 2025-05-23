@@ -62,7 +62,7 @@ def get_google_credentials():
     ]
 
     creds_info = {}
-    
+
     # Vérification de l'existence de la section des secrets Google
     if "google_service_account" not in st.secrets:
         st.error("Erreur de configuration : La section '[google_service_account]' est manquante dans vos secrets Streamlit. "
@@ -80,7 +80,7 @@ def get_google_credentials():
     try:
         # gspread utilise ServiceAccountCredentials
         gspread_creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, SCOPES)
-        
+
         # googleapiclient.discovery.build utilise un objet Credentials directement
         # Le format de creds_info est déjà ce dont il a besoin, mais on va le convertir
         # en un objet google.oauth2.service_account.Credentials pour plus de clarté
@@ -135,9 +135,9 @@ def create_spreadsheet_with_data(title, df_filtered, google_api_creds, folder_id
 
         media = MediaFileUpload(temp_file_path, mimetype='text/csv', resumable=True)
         drive_service = get_drive_service(google_api_creds)
-        
+
         file = drive_service.files().create(body=metadata, media_body=media, fields='id').execute()
-        
+
         # Supprimer le fichier temporaire après l'upload
         os.remove(temp_file_path)
 
@@ -174,7 +174,7 @@ if url_sheet:
 
     if df is not None:
         colonnes_disponibles = [col for col in COLONNES_UTILISEES if col in df.columns]
-        
+
         if not colonnes_disponibles:
             st.warning("Aucune des colonnes requises n'a été trouvée dans votre Google Sheet. "
                        "Veuillez vérifier les noms des colonnes dans le Google Sheet source.")
