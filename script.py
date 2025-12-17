@@ -21,7 +21,7 @@ FOLDER_ID = "1euVnfDZbsquY-iMZR7_GIeyA2_4zbKsq"
 
 # Colonnes à garder
 COLONNES_UTILISEES = [
-    "Classe", "Classe Groupe", "Nom", "Prénom", "Date De Naissance", "Nom / Prénom de l'élève", "Genre",
+    "Classe", "Classe Groupe", "Nom", "Prénom", "Date De Naissance", "Nom / Prénom de l'élève", "Nationalité_El", "Genre",
     "PersonneID", "Responsable 1 Nom", "Responsable 1 Prénom", "Responsable 1 Titre", "Responsable 1 Rue",
     "Responsable 1 Numéro", "Responsable1_BP", "Responsable 1 Localité", "Responsable 1 CP", "Responsable1_Email"
 ]
@@ -214,6 +214,7 @@ else:
 
 st.markdown("---")
 st.markdown("Développé avec ❤️ pour ENVOL via Streamlit et Google APIs")
+
 
 
 
